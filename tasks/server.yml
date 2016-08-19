@@ -1,0 +1,46 @@
+
+  - name: Enable ccache on distcc server
+    lineinfile:
+      dest: /etc/portage/make.conf/distcc
+      line: "{{ item.line }}"
+      regexp: "{{ item.regexp }}"
+      state: "{{ item.state }}"
+    with_items:
+      - { line: 'DISTCC_CMDLIST="/etc/distcc/cmdlist"'
+          , regexp: '^DISTCC_CMDLIST.*', state: 'present'}
+    when: "{{ ccache.stat.exists }}"
+    tags: [config]
+
+  - name: Check /etc/distcc/cmdlist
+    copy:
+      content: ""
+      dest: "/etc/distcc/cmdlist"
+      force: no
+    tags: [config]
+
+  - name: Set up /etc/distcc/cmdlist
+    lineinfile:
+      dest: /etc/distcc/cmdlist
+      line: "{{ item }}"
+      state: "present"
+    with_items: "{{ distcc.cmdlist }}"
+    tags: [config]
+
+  - name: Set up server
+    lineinfile:
+      dest: /etc/conf.d/distccd
+      line: "DISTCCD_OPTS=\"${DISTCCD_OPTS} {{ item }}\""
+    with_items: "{{ distcc.server_options }}"  
+    notify:
+      - Restart distccd
+    tags: [config]
+
+  - name: Setup "distccd" service
+    service:
+      name: "distccd"
+      enabled: "yes"
+      state: "started"
+      runlevel: "default"
+    tags: [services]
+
+  - meta: flush_handlers

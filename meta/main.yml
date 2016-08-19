@@ -1,0 +1,19 @@
+galaxy_info:
+  author: Lexa
+  description: Enable distcc in gentoo
+  company: Freelance
+
+  issue_tracker_url: http://example.com/issue/tracker
+
+  license: BSD
+
+  min_ansible_version: 1.2
+
+  platforms:
+  - name: Gentoo
+    versions:
+      - all
+
+  galaxy_tags: ["distcc", "gentoo"]
+
+dependencies: []

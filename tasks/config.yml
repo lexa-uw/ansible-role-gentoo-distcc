@@ -1,0 +1,28 @@
+
+  - name: Check make.conf/distcc
+    copy:
+      content: ""
+      dest: "/etc/portage/make.conf/distcc"
+      force: no
+    tags: [config]
+
+  - name: Set up make.conf/distcc
+    lineinfile:
+      dest: /etc/portage/make.conf/distcc
+      line: "{{ item.line }}"
+      regexp: "{{ item.regexp }}"
+      state: "{{ item.state }}"
+    with_items:
+      - { line: 'DISTCC_DIR="{{ distcc.dir }}"', regexp: '^DISTCC_DIR.*'
+          , state: 'present'}
+      - { line: 'FEATURES="${FEATURES} distcc"', regexp: '^FEATURES.*'
+          , state: '{% if ccache.stat.exists == false %}present{% else %}absent{% endif %}'}
+      - { line: 'MAKEOPTS="-j{{ distcc.make_conf_MAKEOPTS_j }} -l{{ distcc.make_conf_MAKEOPTS_l }}"'
+        , regexp: '^MAKEOPTS.*', state: 'present'}
+    tags: [config]
+
+  - name: Create distcc directory
+    file:
+      state: directory
+      path: "{{ distcc.dir }}"
+    tags: [env]

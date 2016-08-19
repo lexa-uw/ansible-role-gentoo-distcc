@@ -1,0 +1,5 @@
+---
+# handlers file for gentoo.distcc
+
+- name: Restart distccd
+  service: name=distccd state=restarted

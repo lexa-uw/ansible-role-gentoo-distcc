@@ -1,0 +1,37 @@
+
+  - name: Install distcc
+    package:
+      package: "sys-devel/distcc"
+      newuse: "yes"
+      update: "yes"
+    tags: [package]
+
+  - shell: gcc -dumpmachine
+    changed_when: false
+    register: machine
+    tags: [config]
+
+  - name: Add wrapper
+    template:
+      src: "usr/lib/distcc/bin/wrapper"
+      dest: "/usr/lib/distcc/bin/{{ machine.stdout }}-wrapper"
+      mode: "a+x"
+    register: wrapper
+    tags: [config]
+
+  - name: Remove incorrect links
+    file:
+      state: absent
+      path: /usr/lib/distcc/bin/{{ item }}
+    with_items: [c++, g++, gcc, cc]
+    when: wrapper.changed
+    tags: [env]
+
+  - name: Make links
+    file:
+      state: link
+      src: "/usr/lib/distcc/bin/{{ machine.stdout }}-wrapper"
+      dest: /usr/lib/distcc/bin/{{ item }}
+    with_items: [c++, g++, gcc, cc]
+    when: wrapper.changed
+    tags: [env]

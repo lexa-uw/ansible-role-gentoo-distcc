@@ -1,0 +1,23 @@
+
+  - name: Set up hosts
+    lineinfile:
+      dest: /etc/distcc/hosts
+      line: "{{ item }}"
+    with_items: "{{ distcc.hosts }}"
+    when: "{{ distcc.hosts|length }}"
+    tags: [config]
+
+  - name: Remove localhost
+    lineinfile:
+      dest: /etc/distcc/hosts
+      line: "{{ item.line }}"
+      regexp: "{{ item.regexp }}"
+      backrefs: yes
+    with_items:
+      - { regexp: "^localhost(.*)",
+          line: '# localhost\1' }
+      - { regexp: '^127\.0\.0\.1(.*)',
+          line: '# 127.0.0.1\1' }
+    when: "{{ distcc.remove_localhost }}"
+    tags: [config]
+

@@ -1,0 +1,2 @@
+#!/bin/bash
+exec /usr/lib/distcc/bin/{{ machine.stdout }}-${0:$[-2]} "$@"

@@ -1,0 +1,13 @@
+---
+# defaults file for gentoo.distcc
+
+distcc:
+  ccache_config: /etc/ccache.conf
+  cmdlist: 
+    - /usr/lib/ccache/bin/g++ 
+  dir: /var/tmp/portage/.distcc 
+  make_conf_MAKEOPTS_j: "{{ ansible_processor_vcpus + 1 }}"
+  make_conf_MAKEOPTS_l: "{{ ansible_processor_vcpus }}"
+  remove_localhost: true
+  hosts: [] 
+  server_options: []
