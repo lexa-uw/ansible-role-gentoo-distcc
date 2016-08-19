@@ -6,6 +6,9 @@
       path: "{{ distcc.ccache_config }}"
     register: ccache
 
+  - include: install.yml
+  - include: config.yml
+
   - name: Linking with ccache
     lineinfile:
       dest: "{{ distcc.ccache_config }}"
@@ -13,9 +16,6 @@
       regexp: '^prefix_command.*'
     when: "{{ ccache.stat.exists }}"
     tags: [config]
-
-  - include: install.yml
-  - include: config.yml
 
   - include: client.yml
 
