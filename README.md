@@ -1,4 +1,4 @@
-Role Name
+Ansible role "gentoo.distcc"
 =========
 
 Ansible role which set up distcc in Gentoo. Also links within ccache if enabled.
