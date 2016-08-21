@@ -1,14 +1,11 @@
 
   - name: Enable ccache on distcc server
-    lineinfile:
-      dest: /etc/portage/make.conf/distcc
-      line: "{{ item.line }}"
-      regexp: "{{ item.regexp }}"
-      state: "{{ item.state }}"
-    with_items:
-      - { line: 'DISTCC_CMDLIST="/etc/distcc/cmdlist"'
-          , regexp: '^DISTCC_CMDLIST.*', state: 'present'}
+    shell:
+      cmd: distcc-config --set-env DISTCC_CMDLIST "/etc/distcc/cmdlist"
     when: "{{ ccache.stat.exists }}"
+    changed_when: False
+    notify:
+      - Restart distccd
     tags: [config]
 
   - name: Check /etc/distcc/cmdlist
