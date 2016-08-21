@@ -1,9 +1,18 @@
 
   - name: Enable cmdlist
-    shell:
-      cmd: distcc-config --set-env DISTCC_CMDLIST "/etc/distcc/cmdlist"
-    changed_when: False
+    lineinfile:
+      dest: /etc/env.d/02distcc
+      line: 'DISTCC_CMDLIST="/etc/distcc/cmdlist"'
+      regexp: "^DISTCC_CMDLIST.*"
+      state: "present"
     when: "{{ distcc.cmdlist|length }}"
+    register: cmdlist_env
+    tags: [config]
+
+  - shell:
+      cmd: env-update
+    changed_when: False
+    when: "{{ cmdlist_env.changed }}"
     notify:
       - Restart distccd
     tags: [config]
