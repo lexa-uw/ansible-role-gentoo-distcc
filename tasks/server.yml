@@ -1,9 +1,9 @@
 
-  - name: Enable ccache on distcc server
+  - name: Enable cmdlist
     shell:
       cmd: distcc-config --set-env DISTCC_CMDLIST "/etc/distcc/cmdlist"
-    when: "{{ ccache.stat.exists }}"
     changed_when: False
+    when: "{{ distcc.cmdlist|length }}"
     notify:
       - Restart distccd
     tags: [config]
@@ -13,6 +13,7 @@
       content: ""
       dest: "/etc/distcc/cmdlist"
       force: no
+    when: "{{ distcc.cmdlist|length }}"
     tags: [config]
 
   - name: Set up /etc/distcc/cmdlist
@@ -21,6 +22,7 @@
       line: "{{ item }}"
       state: "present"
     with_items: "{{ distcc.cmdlist }}"
+    when: "{{ distcc.cmdlist|length }}"
     notify:
       - Restart distccd
     tags: [config]

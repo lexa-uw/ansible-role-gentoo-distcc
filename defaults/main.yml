@@ -2,15 +2,8 @@
 # defaults file for gentoo.distcc
 
 distcc:
-  ccache_config: /var/tmp/ccache/ccache.conf
-  cmdlist: 
-    - /usr/lib/ccache/bin/c++
-    - /usr/lib/ccache/bin/cc
-    - /usr/lib/ccache/bin/g++
-    - /usr/lib/ccache/bin/gcc
-    - /usr/lib/ccache/bin/x86_64-pc-linux-gnu-c++
-    - /usr/lib/ccache/bin/x86_64-pc-linux-gnu-g++
-    - /usr/lib/ccache/bin/x86_64-pc-linux-gnu-gcc
+  ccache_config: /etc/portage/make.conf/ccache
+  cmdlist: []
   dir: /var/tmp/portage/.distcc 
   make_conf_MAKEOPTS_j: "{{ ansible_processor_vcpus + 1 }}"
   make_conf_MAKEOPTS_l: "{{ ansible_processor_vcpus }}"

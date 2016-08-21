@@ -1,4 +1,9 @@
 
+  - name: Check make.conf/ccache
+    stat:
+      path: "{{ distcc.ccache_config }}"
+    register: ccache
+
   - name: Check make.conf/distcc
     copy:
       content: ""
@@ -19,6 +24,14 @@
           , state: '{% if ccache.stat.exists == false %}present{% else %}absent{% endif %}'}
       - { line: 'MAKEOPTS="-j{{ distcc.make_conf_MAKEOPTS_j }} -l{{ distcc.make_conf_MAKEOPTS_l }}"'
         , regexp: '^MAKEOPTS.*', state: 'present'}
+    tags: [config]
+
+  - name: Linking with ccache
+    lineinfile:
+      dest: "{{ distcc.ccache_config }}"
+      line: 'CCACHE_PREFIX="distcc"'
+      regexp: '^CCACHE_PREFIX.*'
+    when: "{{ ccache.stat.exists }}"
     tags: [config]
 
   - name: Create distcc directory

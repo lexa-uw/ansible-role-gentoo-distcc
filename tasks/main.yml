@@ -1,23 +1,8 @@
 ---
 # tasks file for gentoo.distcc
 
-  - name: Check ccache
-    stat:
-      path: "{{ distcc.ccache_config }}"
-    register: ccache
-
   - include: install.yml
   - include: config.yml
-
-  - name: Linking with ccache
-    lineinfile:
-      dest: "{{ distcc.ccache_config }}"
-      line: "prefix_command = distcc"
-      regexp: '^prefix_command.*'
-    when: "{{ ccache.stat.exists and distcc.server_options|length == 0}}"
-    tags: [config]
-
   - include: client.yml
-
   - include: server.yml
     when: "{{ distcc.server_options|length }}"
