@@ -14,10 +14,10 @@
       dest: "{{ distcc.ccache_config }}"
       line: "prefix_command = distcc"
       regexp: '^prefix_command.*'
-    when: "{{ ccache.stat.exists }}"
+    when: "{{ ccache.stat.exists and distcc.server_options|length == 0}}"
     tags: [config]
 
   - include: client.yml
 
   - include: server.yml
-    when: "{{ distcc.server_options|length }}" 
+    when: "{{ distcc.server_options|length }}"
