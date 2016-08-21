@@ -1,4 +1,11 @@
 
+  - name: Check hosts exists
+    copy:
+      content: ""
+      dest: "/etc/distcc/hosts"
+      force: no
+    tags: [config]
+
   - name: Set up hosts
     lineinfile:
       dest: /etc/distcc/hosts
