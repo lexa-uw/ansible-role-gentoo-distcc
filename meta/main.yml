@@ -3,7 +3,7 @@ galaxy_info:
   description: Enable distcc in gentoo
   company: Freelance
 
-  issue_tracker_url: http://example.com/issue/tracker
+  issue_tracker_url: https://github.com/lexa-uw/ansible-role-gentoo.distcc/issues
 
   license: BSD
 
